@@ -1,4 +1,4 @@
-# Frontend Interview
+# Frontend Interview BitWyre
 
 Implement either 1 of the 1-3 challenge assignments. Please fork this repo and share it with us.
 
