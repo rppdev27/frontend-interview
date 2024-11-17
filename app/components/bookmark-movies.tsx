@@ -47,7 +47,7 @@ export default function FavoritesPage() {
         >
             <div className="w-[79%]">
                 <div className="flex items-center gap-2 mb-2">
-                    <div className="w-1 h-4 bg-[#c3e647]"></div>
+                    <div className="w-1 h-4 dark:bg-[#c3e647] bg-slate-900"></div>
                     <span className="uppercase font-bold tracking-wider text-lg md:text-xl dark:text-white text-[#252424]">
                         Your Favourite
                     </span>

@@ -306,7 +306,7 @@ const handleGenreSelect = (genre: string) => {
   const [selectedGenres, setSelectedGenres]: any = useState([]);
   const [yearRange, setYearRange] = useState([1900, 2024]);
   // Add a new state to keep original movies
-const [originalMovies, setOriginalMovies] = useState([]);
+  const [originalMovies, setOriginalMovies] = useState([]);
 
   const categories = [
     { 
@@ -363,45 +363,6 @@ const [originalMovies, setOriginalMovies] = useState([]);
 // Add state for selected genre
 const [selectedGenre, setSelectedGenre] = useState('All');
 
-// Modify the handleGenreChange function
-const handleGenreChange = (genre: any) => {
-  setSelectedGenre(genre);
-  
-  if (genre === 'All') {
-    // Reset to show all movies
-    setMovies(movies);
-    setVisibleMovies(movies.slice(0, INITIAL_LIMIT));
-    return;
-  }
-
-  // Filter movies by selected genre
-  const filteredMovies = movies.filter( (movie: any) => 
-    movie.genre.split(', ').includes(genre)
-  );
-
-  setMovies(filteredMovies);
-  setVisibleMovies(filteredMovies.slice(0, INITIAL_LIMIT));
-};
-
-
-  const handleRatingChange = (e: any) => {
-    const value = parseFloat(e.target.value);
-    const isMin = e.target.name === 'minRating';
-    setRating(prev => isMin ? [value, prev[1]] : [prev[0], value]);
-  };
-
-  const handleYearChange = (e: any) => {
-    const value = parseInt(e.target.value);
-    const isMin = e.target.name === 'minYear';
-    setYearRange(prev => isMin ? [value, prev[1]] : [prev[0], value]);
-  };
-
-  const resetFilters = () => {
-    setRating([0, 10]);
-    setSelectedGenres([]);
-    setYearRange([1900, 2024]);
-    setFilteredMovies([]);
-  };
 
 // Modify getRandomMovies to store original movies
 const getRandomMovies = async () => {
@@ -601,141 +562,6 @@ const handleFilterClick = (filterLabel: string) => {
   setVisibleMovies(sortedMovies.slice(0, INITIAL_LIMIT));
 };
 
-
-  // Custom Modal Component
-  const FilterModal = () => {
-    if (!isModalOpen) return null;
-
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
-        {/* Backdrop */}
-        <div 
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-          onClick={() => setIsModalOpen(false)}
-        />
-        
-        {/* Modal Content */}
-        <div className="relative bg-[#252424] text-white rounded-xl shadow-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-          <div className="p-6">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold">Filter Movies</h2>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Rating Filter */}
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-200 mb-3">Rating Range</h3>
-              <div className="space-y-2">
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="text-xs text-gray-400">Min Rating</label>
-                    <input
-                      type="number"
-                      name="minRating"
-                      min="0"
-                      max="10"
-                      step="0.1"
-                      value={rating[0]}
-                      onChange={handleRatingChange}
-                      className="w-full px-3 py-2 bg-[#333333] rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c3e647]"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="text-xs text-gray-400">Max Rating</label>
-                    <input
-                      type="number"
-                      name="maxRating"
-                      min="0"
-                      max="10"
-                      step="0.1"
-                      value={rating[1]}
-                      onChange={handleRatingChange}
-                      className="w-full px-3 py-2 bg-[#333333] rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c3e647]"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Year Filter */}
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-200 mb-3">Year Range</h3>
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="text-xs text-gray-400">From Year</label>
-                  <input
-                    type="number"
-                    name="minYear"
-                    min="1900"
-                    max="2024"
-                    value={yearRange[0]}
-                    onChange={handleYearChange}
-                    className="w-full px-3 py-2 bg-[#333333] rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c3e647]"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label className="text-xs text-gray-400">To Year</label>
-                  <input
-                    type="number"
-                    name="maxYear"
-                    min="1900"
-                    max="2024"
-                    value={yearRange[1]}
-                    onChange={handleYearChange}
-                    className="w-full px-3 py-2 bg-[#333333] rounded-lg text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c3e647]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Genre Filter */}
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-200 mb-3">Genres</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {genres.map((genre: any) => (
-                  <label
-                    key={genre}
-                    className="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedGenres.includes(genre)}
-                      onChange={() => handleGenreChange(genre)}
-                      className="w-4 h-4 rounded border-gray-600 text-[#c3e647] focus:ring-[#c3e647] bg-[#333333]"
-                    />
-                    <span className="text-sm text-gray-200">{genre}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-4 mt-6">
-              <button
-                onClick={resetFilters}
-                className="flex-1 px-4 py-2 bg-transparent border border-gray-600 text-gray-200 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Reset
-              </button>
-              <button
-                onClick={applyFilters}
-                className="flex-1 px-4 py-2 bg-[#c3e647] text-black rounded-lg hover:bg-[#b3d637] transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   useEffect(() => {
     const observer = new IntersectionObserver(
         (entries) => {
@@ -768,7 +594,7 @@ return (
         <div className="mb-0 w-full">
           <div className="mb-2 flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div className='flex items-center gap-1.5 mb-2'>
-                  <div className='w-1 h-4 bg-[#c3e647]'></div>
+                  <div className='w-1 h-4 dark:bg-[#c3e647] bg-slate-900'></div>
                   <span className='uppercase font-bold tracking-wider text-xl text-[#252424] dark:text-white whitespace-nowrap'>Browse Movie</span>
               </div>
           </div> 
@@ -857,7 +683,7 @@ return (
                 bg-white dark:bg-[#252525] border-transparent text-[#252424] dark:text-white
               `}
             >
-              <Filter size={14} className="text-[#c3e647]" />
+              <Filter size={14} className="dark:text-[#c3e647] text-slate-900" />
             </button>
             
             {filterButtons.map((filter, index) => (
