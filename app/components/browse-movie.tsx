@@ -266,10 +266,10 @@ const handleGenreSelect = (genre: string) => {
         label: "Likes",
         icon: Heart
       },
-      {
-        label: "Director",
-        icon: Film
-      },
+      // {
+      //   label: "Director",
+      //   icon: Film
+      // },
     ];
 
   const notify = () => toast.success('Added to favorite');  
