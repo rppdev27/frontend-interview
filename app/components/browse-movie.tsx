@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
 import { Button, Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react'
 import { Fragment } from 'react';
 import { useFavoritesStore } from '@/app/store';
@@ -797,19 +798,19 @@ return (
 
                 {/* Buttons */}
                 <div className="flex gap-2">
-                  <button 
-                    className="w-full backdrop-blur-md bg-white/10 rounded-lg p-3 transition-transform duration-300 hover:translate-y-[-4px]"
-                    onClick={() => handleWatchClick(movie)}
-                  >
-                    <span className="relative z-10 text-base font-semibold text-white">Watch</span>
-                  </button>
-                  <button 
-                    className="backdrop-blur-md bg-white/10 rounded-lg p-3 transition-transform duration-300 hover:translate-y-[-4px]"
-                    onClick={() => handleToggleBookmark(movie)}
-                  >
-                    <Bookmark size={20} className="relative z-10 text-white" />
-                  </button>
-                </div>
+                <Link 
+                  href={`/watch/${movie.id || 2}`} 
+                  className="w-full backdrop-blur-md bg-white/10 rounded-lg p-3 transition-transform duration-300 hover:translate-y-[-4px] text-center"
+                >
+                  <span className="relative z-10 text-base font-semibold text-white">Watch</span>
+                </Link>
+                <button 
+                  className="backdrop-blur-md bg-white/10 rounded-lg p-3 transition-transform duration-300 hover:translate-y-[-4px]"
+                  onClick={() => handleToggleBookmark(movie)}
+                >
+                  <Bookmark size={20} className="relative z-10 text-white" />
+                </button>
+              </div>
               </div>
             </div>
           ))}
