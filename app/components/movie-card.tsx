@@ -3,12 +3,14 @@ import React from 'react'
 import { BookmarkCheck, Bookmark } from 'lucide-react'
 import { Movie } from '@/app/types'
 import { useFavoritesStore } from '@/app/store'
+import { useRouter } from 'next/navigation'
 
 interface MovieCardProps {
     movie: Movie
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+    const router = useRouter()
     const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore()
     const isMovieFavorite = isFavorite(movie.title)
    
@@ -18,6 +20,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
             removeFavorite(movie.title)
         } else {
             addFavorite(movie)
+        }
+    }
+
+    const handleWatch = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (movie?.id) {
+            router.push(`/watch/${movie.id}`)
         }
     }
 
@@ -35,23 +44,37 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                
-                {/* Favorite Button */}
-                <button
-                    onClick={toggleFavorite}
-                    className={`absolute top-3 right-3 p-2 rounded-full
-                        ${isMovieFavorite
-                            ? 'bg-[#c3e647]/20 hover:bg-[#c3e647]/30'
-                            : 'bg-black/20 hover:bg-black/30'}
-                        backdrop-blur-sm transition-all duration-200
-                        transform hover:scale-110 active:scale-95`}
-                    aria-label={isMovieFavorite ? "Remove from favorites" : "Add to favorites"}
-                >
-                    {isMovieFavorite ? (
-                        <BookmarkCheck className="w-5 h-5 text-[#c3e647]" />
-                    ) : (
-                        <Bookmark className="w-5 h-5 text-gray-200" />
-                    )}
-                </button>
+                {/* Buttons Container */}
+                <div className="absolute top-3 right-3 flex gap-2">
+                    {/* Watch Button */}
+                    <button
+                        onClick={handleWatch}
+                        className="px-4 py-2 rounded-full bg-[#c3e647] hover:bg-[#d4f158] 
+                            transition-all duration-200 transform hover:scale-105 active:scale-95
+                            font-medium text-black text-sm"
+                        aria-label="Watch movie"
+                    >
+                        Watch Now
+                    </button>
+
+                    {/* Favorite Button */}
+                    <button
+                        onClick={toggleFavorite}
+                        className={`p-2 rounded-full
+                            ${isMovieFavorite
+                                ? 'bg-[#c3e647]/20 hover:bg-[#c3e647]/30'
+                                : 'bg-black/20 hover:bg-black/30'}
+                            backdrop-blur-sm transition-all duration-200
+                            transform hover:scale-110 active:scale-95`}
+                        aria-label={isMovieFavorite ? "Remove from favorites" : "Add to favorites"}
+                    >
+                        {isMovieFavorite ? (
+                            <BookmarkCheck className="w-5 h-5 text-[#c3e647]" />
+                        ) : (
+                            <Bookmark className="w-5 h-5 text-gray-200" />
+                        )}
+                    </button>
+                </div>
 
                 {/* Title Container with Glossy Effect */}
                 <div className="absolute bottom-0 w-full p-4">

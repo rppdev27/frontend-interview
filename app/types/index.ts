@@ -15,11 +15,3 @@ export interface Movie {
     videoSource: string,
     videoYoutube: string
 }
-
-// export interface MovieList {
-//     Movies: Movie[]
-// }
-
-// export interface MovieCardProps {
-//     movie: Movie;
-// }
