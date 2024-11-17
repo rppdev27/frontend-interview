@@ -2,21 +2,18 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { Button, Dialog, DialogPanel, DialogTitle, Transition } from '@headlessui/react'
-import { Fragment } from 'react';
 import { useFavoritesStore } from '@/app/store';
 import { Movie } from '@/app/types'
 import toast, { Toaster } from 'react-hot-toast';
 import { 
     Filter, Search, 
-    X, Film,
+    X,
     Heart,
     Bookmark,
     ChevronDown,
     Eye,
     Loader2,
     GalleryHorizontal,
-    X as CloseIcon, Play, Pause, Volume2, VolumeX
 } from 'lucide-react';
 
 interface MovieCardProps {
@@ -81,159 +78,6 @@ const FilterMenu = () => {
     // Reference for the loader element
     const loaderRef = useRef(null);
 
-    // Add these states in your FilterMenu component
-    const [isWatchDialogOpen, setIsWatchDialogOpen] = useState(false);
-    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
-    const videoRef: any = useRef(null);
-
-// Add this function to handle video controls
-const togglePlay = () => {
-  if (videoRef.current) {
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  }
-};
-
-const toggleMute = () => {
-  if (videoRef.current) {
-    videoRef.current.muted = !videoRef.current.muted;
-    setIsMuted(!isMuted);
-  }
-};
-
-// Add the MovieDialog component
-const MovieDialog = () => {
-  if (!selectedMovie) return null;
-
-  return (
-    <Transition appear show={isWatchDialogOpen} as={Fragment}>
-      <Dialog 
-        as="div" 
-        className="relative z-50"
-        onClose={() => {
-          setIsWatchDialogOpen(false);
-          setIsPlaying(false);
-          if (videoRef.current) {
-            videoRef.current.pause();
-          }
-        }}
-      >
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-[#1c1c1c] p-6 shadow-xl transition-all">
-                {/* Close button */}
-                <button 
-                  onClick={() => setIsWatchDialogOpen(false)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
-                >
-                  <CloseIcon className="w-6 h-6 text-white" />
-                </button>
-
-                {/* Video Player */}
-                <div className="relative aspect-video mb-4 bg-black rounded-lg overflow-hidden">
-                  <video
-                    ref={videoRef}
-                    src={selectedMovie.videoSource}
-                    className="w-full h-full object-contain"
-                    onEnded={() => setIsPlaying(false)}
-                  />
-                  
-                  {/* Video Controls */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={togglePlay}
-                        className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-                      >
-                        {isPlaying ? (
-                          <Pause className="w-6 h-6 text-white" />
-                        ) : (
-                          <Play className="w-6 h-6 text-white" />
-                        )}
-                      </button>
-                      <button
-                        onClick={toggleMute}
-                        className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-                      >
-                        {isMuted ? (
-                          <VolumeX className="w-6 h-6 text-white" />
-                        ) : (
-                          <Volume2 className="w-6 h-6 text-white" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Movie Details */}
-                <div className="text-white">
-                  <Dialog.Title as="h3" className="text-2xl font-bold mb-2">
-                    {selectedMovie.title}
-                  </Dialog.Title>
-                  
-                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                    <span>{selectedMovie.year}</span>
-                    <span>•</span>
-                    <span>{selectedMovie.runtime}</span>
-                    <span>•</span>
-                    <span>{selectedMovie.genre}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      {selectedMovie.imdbRating}
-                    </span>
-                  </div>
-
-                  <p className="text-gray-300 mb-4">{selectedMovie.plot}</p>
-
-                  <div className="space-y-2">
-                    <p className="text-sm">
-                      <span className="text-gray-400">Director: </span>
-                      <span className="text-white">{selectedMovie.director}</span>
-                    </p>
-                    <p className="text-sm">
-                      <span className="text-gray-400">Cast: </span>
-                      <span className="text-white">{selectedMovie.actors}</span>
-                    </p>
-                  </div>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
-          </div>
-        </div>
-      </Dialog>
-    </Transition>
-  );
-};
 
 // Modified handleGenreSelect function
 const handleGenreSelect = (genre: string) => {
@@ -734,8 +578,7 @@ return (
         )}
       </div>
     </div>
-    
-    <MovieDialog />
+
     <Toaster position="bottom-right" reverseOrder={false} />
   </div>
 );
