@@ -9,10 +9,9 @@ import { Movie } from '@/app/types'
 import toast, { Toaster } from 'react-hot-toast';
 import { 
     Filter, Search, 
-    X, Swords, Film,
-    Heart, Ghost,
+    X, Film,
+    Heart,
     Bookmark,
-    Moon,
     ChevronDown,
     Eye,
     Loader2,
@@ -51,14 +50,11 @@ const sortMovies = (movies: any[], sortBy: string) => {
 };
 
 
-
-
 const FilterMenu = () => {
 
-  const [isOpen, setIsOpen] = useState(true);
   const [debouncedSearchText, setDebouncedSearchText] = useState('');
   const searchTimeoutRef: any = useRef(null);
-  const genres = [
+  const genres: Array<string> = [
     "Action",
     "Adventure", 
     "Animation",
@@ -91,12 +87,6 @@ const FilterMenu = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const videoRef: any = useRef(null);
-
-    // Add this function to handle watch button click
-    const handleWatchClick = (movie: any) => {
-      setSelectedMovie(movie);
-      setIsWatchDialogOpen(true);
-    };
 
 // Add this function to handle video controls
 const togglePlay = () => {
@@ -267,24 +257,20 @@ const handleGenreSelect = (genre: string) => {
 };
 
 
-    const filterButtons = [
-        {
-          label: "Views",
-          icon: Eye
-        },
-        {
-          label: "Likes",
-          icon: Heart
-        },
-        {
-          label: "Director",
-          icon: Film
-        },
-        // {
-        //   label: "All",
-        //   icon: 'GalleryHorizontal'
-        // }
-      ];
+  const filterButtons = [
+      {
+        label: "Views",
+        icon: Eye
+      },
+      {
+        label: "Likes",
+        icon: Heart
+      },
+      {
+        label: "Director",
+        icon: Film
+      },
+    ];
 
   const notify = () => toast.success('Added to favorite');  
 
@@ -292,7 +278,6 @@ const handleGenreSelect = (genre: string) => {
     console.log(data_movie);
     addFavorite(data_movie);
     notify();
-    // setIsOpen(true);
   }  
   
   const [searchText, setSearchText] = useState('');
@@ -300,66 +285,10 @@ const handleGenreSelect = (genre: string) => {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError]: any = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Filter states
-  const [rating, setRating] = useState([0, 10]);
-  const [selectedGenres, setSelectedGenres]: any = useState([]);
-  const [yearRange, setYearRange] = useState([1900, 2024]);
+
   // Add a new state to keep original movies
   const [originalMovies, setOriginalMovies] = useState([]);
 
-  const categories = [
-    { 
-      id: 1, 
-      title: 'Thriller',
-      Icon: Swords,
-      genre: 'Science Fiction, Fantasy',
-      bgColor: 'bg-[#FFE4E1]'
-    },
-    { 
-      id: 5, 
-      title: 'Drama',
-      Icon: Film,
-      genre: 'Drama, Romance',
-      bgColor: 'bg-[#E6E6FA]'
-    },
-    { 
-      id: 7, 
-      title: 'Romance',
-      Icon: Heart,
-      genre: 'Romance, Drama',
-      bgColor: 'bg-[#FFF0F5]'
-    },
-    { 
-      id: 8, 
-      title: 'Horror',
-      Icon: Ghost,
-      genre: 'Horror, Thriller',
-      bgColor: 'bg-[#F5F5DC]'
-    },
-    { 
-        id: 5, 
-        title: 'Drama',
-        Icon: Film,
-        genre: 'Drama, Romance',
-        bgColor: 'bg-[#E6E6FA]'
-      },
-      { 
-        id: 7, 
-        title: 'Romance',
-        Icon: Heart,
-        genre: 'Romance, Drama',
-        bgColor: 'bg-[#FFF0F5]'
-      },
-      { 
-        id: 8, 
-        title: 'Horror',
-        Icon: Ghost,
-        genre: 'Horror, Thriller',
-        bgColor: 'bg-[#F5F5DC]'
-      },
-  ];
 
 // Add state for selected genre
 const [selectedGenre, setSelectedGenre] = useState('All');
@@ -511,40 +440,6 @@ const searchMovies = async (searchTerm: string) => {
         getRandomMovies();
     }, []);
 
-    // Modified applyFilters function
-    const applyFilters = async () => {
-      try {
-          setLoading(true);
-          
-          let filterUrl = '/api/movies/search?';
-          
-          if (selectedGenres.length > 0) {
-              filterUrl += `genre=${encodeURIComponent(selectedGenres[0])}`;
-          }
-          
-          if (yearRange[0] !== 1900 || yearRange[1] !== 2024) {
-              filterUrl += `&year=${yearRange[0]}`;
-          }
-          
-          const response = await fetch(filterUrl);
-          const data = await response.json();
-          
-          if (data.success) {
-              setMovies(data.data); // Update full movies array
-              setVisibleMovies(data.data.slice(0, INITIAL_LIMIT)); // Show initial set
-          } else {
-              setMovies([]); // Clear both arrays if no results
-              setVisibleMovies([]);
-              setError('No movies found with the selected filters.');
-          }
-      } catch (err) {
-          console.error('Error applying filters:', err);
-          setError('Failed to apply filters. Please try again.');
-      } finally {
-          setLoading(false);
-          setIsModalOpen(false);
-      }
-  };
 
 // Update the filter button click handler
 const handleFilterClick = (filterLabel: string) => {
